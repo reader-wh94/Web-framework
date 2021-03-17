@@ -5,6 +5,7 @@ bin/
 tmp/
 .settings/
 target/
+.springBeans
 
 ### Eclipse Patch ###
 #Eclipse Core
