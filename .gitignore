@@ -1,0 +1,14 @@
+### Eclipse ###
+
+.metadata
+bin/
+tmp/
+.settings/
+target/
+
+### Eclipse Patch ###
+#Eclipse Core
+.project
+
+#JDT-specific
+.classpath
