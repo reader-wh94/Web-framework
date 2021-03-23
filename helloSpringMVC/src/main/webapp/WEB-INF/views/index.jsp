@@ -48,6 +48,7 @@
 
     <!-- Custom styles for this template -->
     <link href="<c:url value="resources/css/carousel.css"/>" rel="stylesheet">
+    <link href="<c:url value="resources/css/main.css"/>" rel="stylesheet">
 </head>
 
 <body>
@@ -61,11 +62,14 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarCollapse">
                 <ul class="navbar-nav mr-auto">
-                    <li class="nav-item active">
-                        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                    <li class="nav-item active"> 
+                        <a class="nav-link" href="<c:url value="/new" />">Home <span class="sr-only">(current)</span></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Link</a>
+                        <a class="nav-link" href="<c:url value="/newoffers" />">Show</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="<c:url value="/createoffer" />">New</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>

@@ -6,94 +6,65 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import kr.ac.hansung.model.Offer;
 
 @Repository
+@Transactional
 public class OfferDao {
 
-	private JdbcTemplate jdbcTemplate;
-
 	@Autowired
-    public void setDataSource(DataSource dataSource) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-    }
-    
-    public int getRowCount() {
-    	String sqlStatement="select count(*) from offers";
-    	return jdbcTemplate.queryForObject(sqlStatement, Integer.class);
-    }
-    
-    //query and return a single object
-    public Offer getOffer(String name) {
-    	String sqlStatement="select * from offers where name=?";
-    	return jdbcTemplate.queryForObject(sqlStatement, new Object[] {name}, new RowMapper<Offer>() {
+	private SessionFactory sessionFactory;
 
-			@Override
-			public Offer mapRow(ResultSet rs, int rowNum) throws SQLException {
-				
-				Offer offer = new Offer();
-				
-				offer.setId(rs.getInt("id"));
-				offer.setName(rs.getString("name"));
-				offer.setEmail(rs.getNString("email"));
-				offer.setText(rs.getString("text"));
-				
-				return offer;
-			}
-    		
-    	});
-    }
-    
-  //query and return a multiple object
-    //cRud
-    public List<Offer> getOffers() {
-    	String sqlStatement="select * from offers";
-    	return jdbcTemplate.query(sqlStatement, new RowMapper<Offer>() {
+	// query and return a single object
+	public Offer getOfferbyId(int id) {
+		Session session = sessionFactory.getCurrentSession();
+		Offer offer = (Offer) session.get(Offer.class, id);
 
-			@Override
-			public Offer mapRow(ResultSet rs, int rowNum) throws SQLException {
-				
-				Offer offer = new Offer();
-				
-				offer.setId(rs.getInt("id"));
-				offer.setName(rs.getString("name"));
-				offer.setEmail(rs.getString("email"));
-				offer.setText(rs.getString("text"));
-				
-				return offer;
-			}
-    		
-    	});
+		return offer;
+	}
+
+	// query and return a multiple object
+	// cRud
+	public List<Offer> getOffers() {
+  
+		Session session = sessionFactory.getCurrentSession();
+    	String hql = "from Offer"; // class Name을 줘야한다 (table name이 아님)
+
+    	Query<Offer> query = session.createQuery(hql, Offer.class);
+    	List<Offer> offerList =  query.getResultList();
+
+    	return offerList; 
     }
-    //Crud method
-    public boolean insert(Offer offer) {
-    	String name = offer.getName();
-    	String email = offer.getEmail();
-    	String text = offer.getText();
-    	
-    	String sqlStatement="insert into offers (name, email, text) values (?,?,?)";
-    	return (jdbcTemplate.update(sqlStatement, new Object[] {name, email, text}) == 1);
-   } 
-    
-    //crUd method
-    public boolean update(Offer offer) {
-    	int id = offer.getId();
-    	String name = offer.getName();
-    	String email = offer.getEmail();
-    	String text = offer.getText();
-    	
-    	String sqlStatement="update offers set name=?, email=?, text=? where id=?";
-    	return (jdbcTemplate.update(sqlStatement, new Object[] {name, email, text, id}) == 1);
-   }
-    
- 	//cruD method
-    public boolean delete(int id) {
-    	String sqlStatement="delete from offers where id=?";
-    	return (jdbcTemplate.update(sqlStatement, new Object[] {id}) == 1); 
-   } 
+
+	// Crud method
+	public void insert(Offer offer) {
+		
+        Session session = sessionFactory.getCurrentSession();
+        session.saveOrUpdate(offer);
+        session.flush(); //@Transaction이기 때문에 자동적으로 flush가 되므로 넣어도 그만, 안넣어도 그만이다.
+	}
+
+	// crUd method
+	public void update(Offer offer) {
+		Session session = sessionFactory.getCurrentSession();
+        session.saveOrUpdate(offer);
+        session.flush();
+
+	}
+
+	// cruD method
+	public void delete(Offer offer) {
+		Session session = sessionFactory.getCurrentSession();
+        session.delete(offer);
+        session.flush();
+	}
 }

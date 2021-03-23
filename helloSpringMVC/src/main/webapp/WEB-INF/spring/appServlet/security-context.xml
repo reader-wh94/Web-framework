@@ -21,8 +21,9 @@
 		<intercept-url pattern="/" access="permitAll" />
 		<intercept-url pattern="/new" access="permitAll" />
 		<intercept-url pattern="/login" access="permitAll" />
-		<intercept-url pattern="/offers" access="permitAll" />
+		<intercept-url pattern="/newoffers" access="permitAll" />
 		<intercept-url pattern="/createoffer" access="hasRole('ROLE_USER')" />
+		<intercept-url pattern="/docreate" access="hasRole('ROLE_USER')" />
 		<intercept-url pattern="/resources/**" access="permitAll" />
 		<intercept-url pattern="/**" access="permitAll" />
 		<form-login login-page="/login"
